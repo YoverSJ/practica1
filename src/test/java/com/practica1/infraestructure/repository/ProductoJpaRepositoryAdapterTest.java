@@ -6,6 +6,7 @@ import com.practica1.domain.model.Proveedor;
 import com.practica1.infraestructure.entity.CategoriaEntity;
 import com.practica1.infraestructure.entity.ProductoEntity;
 import com.practica1.infraestructure.entity.ProveedorEntity;
+import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -157,5 +160,42 @@ class ProductoJpaRepositoryAdapterTest {
         Boolean producto = productoJpaRepositoryAdapter.deletebyId(id);
 
         assertFalse(producto);
+    }
+
+    @Test
+    void findAllExitoso() {
+
+        CategoriaEntity categoria = new CategoriaEntity(1L, "Bebida", 1);
+
+        ProveedorEntity proveedor = new ProveedorEntity(1L, "Empresa 1", "Av. Lima", "1234567", 1);
+
+        ProductoEntity productoEntity1 = new ProductoEntity(1L, "Inca Kola", "Gaseosa", 2.8, 1, categoria, proveedor);
+        ProductoEntity productoEntity2 = new ProductoEntity(2L, "Coca Kola", "Gaseosa", 2.9, 1, categoria, proveedor);
+
+        List<ProductoEntity> productoEntities = new ArrayList<>();
+        productoEntities.add(productoEntity1);
+        productoEntities.add(productoEntity2);
+
+        Mockito.when(productoJpaRepository.findAll()).thenReturn(productoEntities);
+
+        Optional<List<Producto>> responseProductos = productoJpaRepositoryAdapter.getProductos();
+
+        if (!responseProductos.isEmpty()){
+            assertNotNull(responseProductos);
+        }
+
+    }
+
+    @Test
+    void findAllNull() {
+
+        List<ProductoEntity> productoEntities = new ArrayList<>();
+
+        Mockito.when(productoJpaRepository.findAll()).thenReturn(productoEntities);
+
+        Optional<List<Producto>> responseProductos = productoJpaRepositoryAdapter.getProductos();
+
+        assertNull(responseProductos);
+
     }
 }
