@@ -136,6 +136,26 @@ class ProductoJpaRepositoryAdapterTest {
     }
 
     @Test
-    void deletebyId() {
+    void deletebyIdExitoso() {
+
+        Long id = 1L;
+
+        Mockito.when(productoJpaRepository.existsById(id)).thenReturn(true);
+
+        Boolean producto = productoJpaRepositoryAdapter.deletebyId(id);
+
+        assertTrue(producto);
+    }
+
+    @Test
+    void deletebyIdFalse() {
+
+        Long id = 1L;
+
+        Mockito.when(productoJpaRepository.existsById(id)).thenReturn(false);
+
+        Boolean producto = productoJpaRepositoryAdapter.deletebyId(id);
+
+        assertFalse(producto);
     }
 }
